@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("create_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  post           Post?
+  name           String?
+  second_name    String?
+  surname        String?
+  dateOfBirthday String? @map("date_of_birthday")
+  photo          String?
+  email          String? @unique
+  password       String?
+
+  groupId         String?    @map("group_id")
+  groupCuratorId  String?    @unique @map("group_curator_id")
+  groupHeadmenId  String?    @unique @map("group_headmen_id")
+  markPartId      String?    @map("mark_part_id")
+  markPartTeacher MarkPart[] @relation("teacher")
+  markPartStudent MarkPart[] @relation("student")
+  parts           Part[]
+  curator         Group?     @relation("curator", fields: [groupCuratorId], references: [id], map: "curator")
+  headmen         Group?     @relation("headmen", fields: [groupHeadmenId], references: [id], map: "headmen")
+  students        Group?     @relation("students", fields: [groupId], references: [id])
+
+  @@map("user")
+}
+
+model Part {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("create_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  partName  String   @map("part_name")
+  date      DateTime
+  number    Int
+  room      Int?
+
+  userId  String @map("user_id")
+  groupId String @map("group_id")
+  group   Group  @relation(fields: [groupId], references: [id])
+  teacher User   @relation(fields: [userId], references: [id])
+
+  @@map("part")
+}
+
+model Group {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("create_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  name      String
+
+  parts    Part[]
+  curator  User?  @relation("curator")
+  headmen  User?  @relation("headmen")
+  students User[] @relation("students")
+
+  @@map("group")
+}
+
+model MarkPart {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("create_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  userId    String   @map("user_id")
+  student   User     @relation("student", fields: [userId], references: [id], map: "student")
+  teacher   User     @relation("teacher", fields: [userId], references: [id], map: "teacher")
+
+  @@map("mark_part")
+}
+
+enum Post {
+  student
+  teacher
+  dispatcher
+  curator
+  administrator
+}
