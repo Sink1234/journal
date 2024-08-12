@@ -1,0 +1,1 @@
+export {AppletPWAInstruction} from "./ui/AppletPWAInstruction";

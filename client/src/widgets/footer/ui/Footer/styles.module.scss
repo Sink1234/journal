@@ -1,0 +1,21 @@
+.sticky {
+  @apply bg-[color:var(--blue)] flex items-center h-[120px] overflow-visible px-4 py-0 rounded-[42px_42px_0_0];
+}
+
+.fflex {
+  @apply flex flex-row justify-between items-center w-[calc(100vw_-_32px)] max-w-[1140px] mx-4 my-0;
+  @media (min-width: 1140px) {
+    @apply mx-auto my-0;
+  }
+}
+
+.right {
+  @apply h-[74px] flex flex-col items-end justify-end;
+  svg {
+    @apply cursor-pointer w-7 h-7;
+  }
+  p {
+    @apply text-[#D1D1D1] text-[9px] not-italic font-semibold leading-[1.421];
+  }
+}
+

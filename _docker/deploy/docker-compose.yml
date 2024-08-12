@@ -1,0 +1,81 @@
+version: '3.9'
+services:
+  database:
+    image: postgres:16.2-bullseye
+    restart: unless-stopped
+    env_file:
+      - $env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - journal-network
+    expose:
+      - "5432"
+    ports:
+      - "127.0.0.1:5432:5432"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+  server:
+    container_name: journal-nest
+    build:
+      context: ../../.
+      dockerfile: ./_docker/deploy/server/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - $env
+    networks:
+      - journal-network
+    expose:
+      - "4200"
+    ports:
+      - "127.0.0.1:4200:4200"
+    depends_on:
+      - database
+
+  client:
+    restart: always
+    container_name: journal-next
+    build:
+      context: ../../.
+      dockerfile: ./_docker/deploy/client/Dockerfile
+    environment:
+      NODE_ENV: production
+    env_file:
+      - $env
+    networks:
+      - journal-network
+    expose:
+      - "3001"
+    ports:
+      - "80:3001"
+    depends_on:
+      - server
+
+#  nginx:
+#    image: nginx:1.18-alpine
+#    container_name: journal-nginx
+#    restart: unless-stopped
+#    volumes:
+#      - ./nginx/config/nginx.conf:/etc/nginx/conf.d/default.conf:z,ro
+#      - ./nginx/certificates:/etc/nginx/certificates
+#    ports:
+#      - "8080:80"
+#      - "443:443"
+#    networks:
+#      - journal-network
+#    depends_on:
+#      - client
+#      - server
+
+
+volumes:
+  postgres:
+    driver: local
+
+networks:
+  journal-network:
+    driver: bridge
+

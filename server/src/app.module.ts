@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';;
-import { AuthModule } from './auth/auth.module';
-import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
+import { TelegramModule } from './telegram/telegram.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, UserModule],
+  imports: [ConfigModule.forRoot(), TelegramModule],
 })
 export class AppModule {}

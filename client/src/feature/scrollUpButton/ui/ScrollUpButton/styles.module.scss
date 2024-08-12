@@ -1,0 +1,17 @@
+.btn {
+  @apply flex justify-center items-center fixed cursor-pointer z-[1] w-0 h-0 right-[55px] bottom-[45px] before:absolute before:content-[url("/Arrow.svg")] before:flex before:flex-row before:justify-center before:items-center before:w-0 before:h-0 before:translate-x-[0%] before:translate-y-[0%] before:opacity-0 before:rounded-[25px];
+  @media screen and (min-width: 1100px) {
+    display: none;
+  }
+  &::before {
+    background: var(--blue);
+    transition: opacity 0.6s, width 0.9s, height 0.9s;
+  }
+  &.view::before {
+    @apply absolute content-[url("/images/icons/arrow-top.svg")] w-[49px] h-[49px] flex flex-row justify-center items-center opacity-100 translate-x-0 translate-y-0 rounded-[25px];
+    background: var(--blue);
+    transition: opacity 0.9s, width 0.6s, height 0.6s;
+  }
+}
+
+

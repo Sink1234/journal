@@ -1,0 +1,99 @@
+.wrapper {
+  @apply relative w-[42px] h-[42px] -mt-[2px];
+  @media (min-width: 600px) {
+    @apply w-auto h-auto static;
+  }
+  @media (min-width: 600px) {
+    @apply relative h-[42px];
+  }
+}
+
+.search {
+  @apply absolute w-[42px] shadow-[0_0_0_0px_var(--white)] bg-white z-[1] rounded-[27px] right-0 top-0;
+  transition: .6s;
+
+  * {
+    @apply box-border scroll-smooth;
+  }
+
+  @media (pointer: fine) {
+    @apply hover:shadow-[0_0_0_6px_var(--white)];
+  }
+  @media (min-width: 600px) {
+    position: relative;
+    right: 0 !important;
+    left: auto !important;
+    transition: 200ms ease-out box-shadow;
+  }
+
+  .input {
+    @apply overflow-hidden w-0 opacity-0 text-[13px] text-gray bg-gray-lite  h-[42px] outline-none rounded-[21px];
+    transition: 1s ease opacity, 100ms ease padding;
+    @media (min-width: 600px) {
+      @apply w-0;
+      transition: 0.7s ease-in width, 0.7s ease opacity, 100ms ease padding;
+    }
+  }
+
+  &-active {
+    @apply w-[calc(100vw_-_70px)] translate-x-[74.5px] text-[15px] shadow-[0_0_0_6px_var(--white)] z-[1];
+    transition: .6s;
+    @media (min-width: 600px) {
+      @apply translate-x-0 w-auto;
+    }
+
+    .input {
+      @apply w-full opacity-100 transition-[0.6s] p-[13px];
+      @media (min-width: 600px) {
+        @apply w-[215px];
+      }
+    }
+
+    .box {
+      gap: 4px;
+    }
+  }
+}
+
+.button {
+  @apply min-w-[42px] min-h-[42px] flex justify-center items-center bg-blue cursor-pointer z-[1] scale-105 select-none rounded-[21px];
+  transition: 50ms scale ease-in-out;
+
+  &:active {
+    scale: 0.9;
+  }
+}
+
+.result {
+  @apply block absolute w-full h-0 max-h-[172px] shadow-[0_0_0_0px_var(--white)] bg-white top-[calc(100%_-_19px)] z-[-1] transition-[0.3s] pt-4 rounded-br-[27px] rounded-bl-[27px] right-0;
+  .result__wrapper {
+    display: none;
+  }
+}
+
+.resultActive {
+  @apply max-h-[172px] h-auto overflow-hidden transition-[0.3s] top-[calc(100%_-_15px)] z-[-1] shadow-[0_0_0_6px_var(--white)] bg-white pt-0 rounded-br-[27px] rounded-bl-[27px] right-0;
+}
+
+.result__wrapper {
+  @apply h-auto transition-[0.6s] pl-7 pr-0.5 pt-3 pb-[18px];
+}
+
+.list {
+  @apply h-full max-h-[130px] overflow-y-auto flex flex-col gap-[9px] text-gray;
+  transition: .6s height;
+
+  &::-webkit-scrollbar {
+    @apply w-1 bg-transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    @apply rounded-sm bg-gray-lite;
+  }
+
+  &::-webkit-scrollbar-track {
+    @apply mb-1.5;
+  }
+}
+
+/* End Result */

@@ -8,79 +8,42 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now()) @map("create_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id            String   @id @default(cuid())
+  telegram_id   String   @unique
+  name          String
+  telephone     String
+  enrollee      Boolean  @default(false)
+  tickets       Ticket[] 
+  courses       Course[] @relation("UserCourses")
 
-  post           Post?
-  name           String?
-  second_name    String?
-  surname        String?
-  dateOfBirthday String? @map("date_of_birthday")
-  photo          String?
-  email          String? @unique
-  password       String?
-
-  groupId         String?    @map("group_id")
-  groupCuratorId  String?    @unique @map("group_curator_id")
-  groupHeadmenId  String?    @unique @map("group_headmen_id")
-  markPartId      String?    @map("mark_part_id")
-  markPartTeacher MarkPart[] @relation("teacher")
-  markPartStudent MarkPart[] @relation("student")
-  parts           Part[]
-  curator         Group?     @relation("curator", fields: [groupCuratorId], references: [id], map: "curator")
-  headmen         Group?     @relation("headmen", fields: [groupHeadmenId], references: [id], map: "headmen")
-  students        Group?     @relation("students", fields: [groupId], references: [id])
-
-  @@map("user")
+  Payment Payment[]
 }
 
-model Part {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now()) @map("create_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  partName  String   @map("part_name")
-  date      DateTime
-  number    Int
-  room      Int?
-
-  userId  String @map("user_id")
-  groupId String @map("group_id")
-  group   Group  @relation(fields: [groupId], references: [id])
-  teacher User   @relation(fields: [userId], references: [id])
-
-  @@map("part")
+model Ticket {
+  id         String   @id @default(cuid())
+  date       String
+  time       String
+  enrolleeId String
+  enrollee   User     @relation(fields: [enrolleeId], references: [id])
 }
 
-model Group {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now()) @map("create_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  name      String
+model Course {
+  id          String    @id @default(cuid())
+  name        String
+  description String
+  gender      String
+  youtubeLink String
+  users       User[]    @relation("UserCourses")
 
-  parts    Part[]
-  curator  User?  @relation("curator")
-  headmen  User?  @relation("headmen")
-  students User[] @relation("students")
-
-  @@map("group")
+  Payment Payment[]
 }
 
-model MarkPart {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now()) @map("create_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  userId    String   @map("user_id")
-  student   User     @relation("student", fields: [userId], references: [id], map: "student")
-  teacher   User     @relation("teacher", fields: [userId], references: [id], map: "teacher")
-
-  @@map("mark_part")
-}
-
-enum Post {
-  student
-  teacher
-  dispatcher
-  curator
-  administrator
+model Payment {
+  id          String   @id @default(cuid())
+  amount      Float
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id])
+  createdAt   DateTime @default(now())
 }
